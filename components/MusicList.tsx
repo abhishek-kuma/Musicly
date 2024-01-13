@@ -14,6 +14,8 @@ interface MusicProps {
   songindex: number;
   setSongindex: Function;
 }
+import { ScrollArea } from "@/components/ui/scroll-area"
+
 
 const MusicList = () => {
   const { songindex, setSongindex } = useGlobalContextProvider() as MusicProps;
@@ -23,8 +25,9 @@ const MusicList = () => {
     setSongindex(num - 1);
   }
   return (
-    <div className='m-2 p-2 max-h-96 overflow-y-auto scrollbar-hide'>
-      <Table className='w-full'>
+    <div className='m-2 left-10 bottom-20'>
+      <ScrollArea>
+      <Table className=''>
         <TableHeader>
           <TableRow>
             <TableHead className="">Song</TableHead>
@@ -37,6 +40,7 @@ const MusicList = () => {
         <TableBody>
 
           {musicTracks.map((track) => (
+            
             <TableRow key={track.ID} onClick={() => { handleSongChange(track.ID) }} className='hover:cursor-pointer'>
               <TableCell className="font-medium">{track.name}</TableCell>
               <TableCell>{track.artist}</TableCell>
@@ -47,6 +51,7 @@ const MusicList = () => {
         </TableBody>
 
       </Table>
+          </ScrollArea>
     </div>
   )
 }

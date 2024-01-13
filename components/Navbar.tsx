@@ -1,10 +1,24 @@
+'use client'
 import React from 'react'
 import { ModeToggle } from './ModeToggle'
 import { Button } from './ui/button'
 import { GiMusicSpell } from "react-icons/gi";
 import Link from 'next/link';
+import { useGlobalContextProvider } from '@/assets/GlobalContext';
+import { useRouter } from 'next/navigation';
+interface LoginInterface{
+    status:boolean;
+    setStatus:Function;
+}
 
 const Navbar = () => {
+
+    const {status,setStatus} = useGlobalContextProvider() as LoginInterface;
+    const { push } = useRouter();
+    async function handleLogOut() {
+        await setStatus(false);
+        push('/signin');
+    }
 
     return (
         <nav className="p-2 mt-2">
@@ -19,15 +33,15 @@ const Navbar = () => {
                 </Link>
 
                 <div className="flex justify-items-center gap-2">
-                    <Button className="">
+                    {!status && <Button className="">
                         <Link href='/signin'>Sign In</Link>
-                    </Button>
-                    <Button className="">
+                    </Button>}
+                    {!status && <Button className="">
                         <Link href='/signup'>Sign Up</Link>
-                    </Button>
-                    <Button className="">
-                        Sign Out
-                    </Button>
+                    </Button>}
+                    {status && <Button className="" onClick={handleLogOut}>
+                        Log Out
+                    </Button>}
 
                     <ModeToggle />
                 </div>

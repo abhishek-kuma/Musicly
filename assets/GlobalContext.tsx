@@ -6,7 +6,7 @@ interface Props {
 }
 
 export const GlobalContextProvider = ({ children }: Props) => {
-    const [status, setStatus] = useState<boolean>(false);
+    const [status, setStatus] = useState<boolean>(true);
     const [name , setName] = useState<string>("");
     const [userid , setUserid] = useState<string>("");
     const [songindex , setSongindex] = useState<number>(0);

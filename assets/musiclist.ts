@@ -137,6 +137,58 @@ const musicTracks = [
         album: "Memories",
         duration : "2:00",
     }
+    ,
+    {
+        ID: "16",
+        name: "Happiness",
+        src: "https://www.bensound.com/bensound-music/bensound-happiness.mp3",
+        letra: "lalaal lalalala",
+        artist: "Benjamin Tissot",
+        album: "Memories",
+
+    }
+    ,
+    {
+        ID: "17",
+        name: "Little Idea",
+        src: "https://www.bensound.com/bensound-music/bensound-littleidea.mp3",
+        letra: "lalaal lalalala",
+        artist: "Benjamin Tissot",
+        album: "Memories",
+
+    }
+    ,
+    {
+        ID: "18",
+        name: "Summer",
+        src: "https://www.bensound.com/bensound-music/bensound-summer.mp3",
+        letra: "lalaal lalalala",
+        artist: "Benjamin Tissot",
+        album: "Memories",
+
+    }
+    ,
+    {
+        ID: "19",
+        name: "Tomorrow",
+        src: "https://www.bensound.com/bensound-music/bensound-tomorrow.mp3",
+        letra: "lalaal lalalala",
+        artist: "Benjamin Tissot",
+        album: "Memories",
+
+    }
+    ,
+    {
+        ID: "20",
+        name: "Ukulele",
+        src: "https://www.bensound.com/bensound-music/bensound-ukulele.mp3",
+        letra: "lalaal lalalala",
+        artist: "Benjamin Tissot",
+        album: "Memories",
+
+    }
+    
 ];
+
 
 export default musicTracks;
