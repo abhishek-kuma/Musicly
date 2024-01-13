@@ -1,24 +1,30 @@
 'use client'
 import React, { useState } from 'react'
 import AudioPlayer from 'react-h5-audio-player';
-import { MdQueueMusic } from "react-icons/md";
 import musicTracks from '@/assets/musiclist';
+import { useGlobalContextProvider } from '@/assets/GlobalContext';
+
+
+interface MusicProps{
+    songindex:number;
+    setSongindex:Function;
+}
 const Player = () => {
-    const [trackIndex, settrackIndex] = useState(0);
+    const {songindex, setSongindex} = useGlobalContextProvider() as MusicProps;
 
     const handleClickPrevious = () => {
-        settrackIndex((currentTrack) =>
+        setSongindex((currentTrack:number) =>
             currentTrack === 0 ? musicTracks.length - 1 : currentTrack - 1
         );
     };
     const handleClickNext = () => {
-        settrackIndex((currentTrack) =>
+        setSongindex((currentTrack:number) =>
             currentTrack < musicTracks.length - 1 ? currentTrack + 1 : 0
         );
     };
 
 
-    console.log(musicTracks[trackIndex].src);
+    console.log(musicTracks[songindex].src);
     // const MusicTitle = (
     //     <div className="text-sm flex">
     //         <MdQueueMusic className='w-5 h-5' />
@@ -27,14 +33,14 @@ const Player = () => {
     //     </div>
     // )
     return (
-        <div className='md-2 mx-10 px-10 mx-10'>
+        <div className=''>
             <AudioPlayer
                 className='rhap_theme-color: #868686;'
                 autoPlay
-                src={musicTracks[trackIndex].src}
+                src={musicTracks[songindex].src}
                 onPlay={e => console.log("onPlay")}
                 showDownloadProgress={true}
-                header={`Now playing: ${musicTracks[trackIndex].name}`}
+                header={`Now playing: ${musicTracks[songindex].name}`}
                 onClickPrevious={handleClickPrevious}
                 onClickNext={handleClickNext}
                 onEnded={handleClickNext}
