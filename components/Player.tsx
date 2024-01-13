@@ -4,34 +4,24 @@ import AudioPlayer from 'react-h5-audio-player';
 import musicTracks from '@/assets/musiclist';
 import { useGlobalContextProvider } from '@/assets/GlobalContext';
 
-
-interface MusicProps{
-    songindex:number;
-    setSongindex:Function;
+interface MusicProps {
+    songindex: number;
+    setSongindex: Function;
 }
 const Player = () => {
-    const {songindex, setSongindex} = useGlobalContextProvider() as MusicProps;
+    const { songindex, setSongindex } = useGlobalContextProvider() as MusicProps;
 
     const handleClickPrevious = () => {
-        setSongindex((currentTrack:number) =>
+        setSongindex((currentTrack: number) =>
             currentTrack === 0 ? musicTracks.length - 1 : currentTrack - 1
         );
     };
     const handleClickNext = () => {
-        setSongindex((currentTrack:number) =>
+        setSongindex((currentTrack: number) =>
             currentTrack < musicTracks.length - 1 ? currentTrack + 1 : 0
         );
     };
-
-
     console.log(musicTracks[songindex].src);
-    // const MusicTitle = (
-    //     <div className="text-sm flex">
-    //         <MdQueueMusic className='w-5 h-5' />
-    //         <div className='mx-1'></div>
-    //         <p>Sample Header</p>
-    //     </div>
-    // )
     return (
         <div className=''>
             <AudioPlayer
@@ -46,7 +36,7 @@ const Player = () => {
                 onEnded={handleClickNext}
                 showSkipControls={true}
                 showJumpControls={false}
-                
+
 
             // other props here
             />
