@@ -1,7 +1,9 @@
+import MusicPlayer from "@/components/MusicPlayer";
+
 export default function Home() {
   return (
-    <div>
-      this is main page
+    <div className="m-2">
+      <MusicPlayer/>
     </div>
   )
 }
