@@ -13,10 +13,11 @@ import { Label } from "@/components/ui/label"
 import { IoMail } from "react-icons/io5"
 import { useState } from "react"
 import Link from "next/link"
-// import AuthService from "@/Appwrite/auth"
+import authService from "@/appwrite/config" //appwrite config file 
 import { toast } from "sonner"
 import { useRouter } from 'next/navigation';
 import { useGlobalContextProvider } from "@/assets/GlobalContext"
+
 
 
 export interface ContextType {
@@ -30,20 +31,20 @@ export default function SignUpForm() {
   const [name, setName] = useState("")
   const [password, setPassword] = useState("")
 
-//   const { status, setStatus } = useGlobalContextProvider() as ContextType;
+  const { status, setStatus } = useGlobalContextProvider() as ContextType;
 
   const { push } = useRouter();
 
   async function handleSignUp() {
-    // try {
-    //   const userAccount = await AuthService.signup({ email, password, name });
-    //   toast.success('Sign Up success ✅');
-    //   setStatus(true);
-    //   push('/');
-    // } catch (error) {
-    //   toast.error('Error in Sign Up 🚫');
-    //   console.error(error);
-    // }
+    try {
+      const userAccount = await authService.signup({ email, password, name });
+      toast.success('Sign Up success ✅');
+      setStatus(true);
+      push('/');
+    } catch (error) {
+      toast.error('Error in Sign Up 🚫');
+      console.error(error);
+    }
   }
   
 

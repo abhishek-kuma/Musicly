@@ -5,19 +5,33 @@ import { Button } from './ui/button'
 import { GiMusicSpell } from "react-icons/gi";
 import Link from 'next/link';
 import { useGlobalContextProvider } from '@/assets/GlobalContext';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { toast } from "sonner"
 import { useRouter } from 'next/navigation';
-interface LoginInterface{
-    status:boolean;
-    setStatus:Function;
+interface LoginInterface {
+    status: boolean;
+    setStatus: Function;
+    avatarUrl:string;
+    setavatarUrl:Function;
 }
+import authService from '@/appwrite/config';
 
 const Navbar = () => {
 
-    const {status,setStatus} = useGlobalContextProvider() as LoginInterface;
+    const { status, setStatus,avatarUrl ,setavatarUrl} = useGlobalContextProvider() as LoginInterface;
     const { push } = useRouter();
+
     async function handleLogOut() {
-        await setStatus(false);
-        push('/signin');
+        try {
+            await authService.logout();
+            setavatarUrl("");
+            setStatus(false);
+            toast.success('Logged Out Successfully ✅');
+            push('/signin');
+        } catch (error) {
+            toast.error('Error in Logging Out ❌');
+        }
+        
     }
 
     return (
@@ -32,7 +46,7 @@ const Navbar = () => {
                     </div>
                 </Link>
 
-                <div className="flex justify-items-center gap-2">
+                <div className="flex justify-items-center gap-3">
                     {!status && <Button className="">
                         <Link href='/signin'>Sign In</Link>
                     </Button>}
@@ -42,6 +56,12 @@ const Navbar = () => {
                     {status && <Button className="" onClick={handleLogOut}>
                         Log Out
                     </Button>}
+                    {
+                        status && <Avatar>
+                            <AvatarImage src={avatarUrl||"https://github.com/shadcn.png"} />
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                    }
 
                     <ModeToggle />
                 </div>

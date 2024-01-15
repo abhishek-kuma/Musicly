@@ -13,7 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { IoMail } from "react-icons/io5";
-// import AuthService from "@/Appwrite/auth"
+import authService from "@/appwrite/config"
 import { useState } from "react"
 import { toast } from "sonner"
 
@@ -23,38 +23,39 @@ import { useRouter } from "next/navigation"
 export interface ContextType {
   status: boolean,
   setStatus: Function,
-  name: string,
-  setName: Function,
-  userid: string,
-  setUserid: Function
-
+  avatarUrl: string,
+  setavatarUrl : Function
+  // name: string,
+  // setName: Function,
+  // userid: string,
+  // setUserid: Function
 }
 
-export default function LoginAccount() {
+export default function SignInAccount() {
 
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-//   const { status, setStatus } = useLoginContext() as ContextType;
-//   const { userid, setUserid } = useLoginContext() as ContextType;
+  const {status,setStatus , avatarUrl , setavatarUrl} = useGlobalContextProvider() as ContextType;
 
 
-//   const { push } = useRouter();
+  const { push } = useRouter();
 
   async function handleLogin() {
-    // try {
-    // //   const userinfo = await AuthService.login({ email, password });
-    // //   // console.log(userinfo)
-    // //   toast.success("Sign In success ✅");
-    // //   setStatus(true);
-    // //   setUserid(userinfo.$id)
+    try {
+      const userinfo = await authService.signin({ email, password });
+      const avatarinfo = await authService.getAvatar();
+      setavatarUrl(avatarinfo);
+      console.log(userinfo)
+      toast.success("Sign In success ✅");
 
-    // //   console.log(userinfo)
-    // //   push('/');
-    // // } catch (error) {
-    // //   toast.error("Error in Sign In 🚫")
-    // //   console.error(error)
-    // }
+      setStatus(true);
+      push('/');
+      // setUserid(userinfo.$id)
+    } catch (error) {
+      toast.error("Error in Sign In 🚫")
+      console.error(error)
+    }
   }
   return (
     <div className="relative flex flex-col justify-center items-center min-h-screen overflow-hidden mx-3 px-1">

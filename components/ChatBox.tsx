@@ -1,7 +1,8 @@
 'use client'
 import * as React from "react"
 import { CheckIcon, PaperPlaneIcon, PlusIcon } from "@radix-ui/react-icons"
-
+import { IoMdClose } from "react-icons/io";
+import { useGlobalContextProvider } from "@/assets/GlobalContext";
 import { cn } from "@/lib/utils"
 import {
   Avatar,
@@ -39,6 +40,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
+interface gloablInfoInterface{
+  chatboxOpen : boolean;
+  setchatboxOpen : Function;
+}
+
 const users = [
   {
     name: "Olivia Martin",
@@ -72,6 +78,8 @@ type User = (typeof users)[number]
 export default function ChatBox() {
   const [open, setOpen] = React.useState(false)
   const [selectedUsers, setSelectedUsers] = React.useState<User[]>([])
+
+  const {chatboxOpen,setchatboxOpen} =  useGlobalContextProvider() as gloablInfoInterface
 
   const [messages, setMessages] = React.useState([
     {
@@ -111,6 +119,8 @@ export default function ChatBox() {
           <TooltipProvider delayDuration={0}>
             <Tooltip>
               <TooltipTrigger asChild>
+
+
                 <Button
                   size="icon"
                   variant="outline"
@@ -120,8 +130,31 @@ export default function ChatBox() {
                   <PlusIcon className="h-4 w-4" />
                   <span className="sr-only">New message</span>
                 </Button>
+
               </TooltipTrigger>
               <TooltipContent sideOffset={10}>New message</TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+
+
+                <Button
+                  size="icon"
+                  variant="outline"
+                  className="ml-auto rounded-full bg-red-500"
+                  onClick={() => setchatboxOpen(false)}
+
+                >
+                  <IoMdClose className="h-4 w-4" />
+                  <span className="sr-only">Close Chat</span>
+                </Button>
+
+                
+
+
+              </TooltipTrigger>
+              <TooltipContent sideOffset={10}>Close Chat</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </CardHeader>
