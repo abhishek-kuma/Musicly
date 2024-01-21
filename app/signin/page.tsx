@@ -19,16 +19,17 @@ import { toast } from "sonner"
 
 import { useGlobalContextProvider } from "@/assets/GlobalContext"
 import { useRouter } from "next/navigation"
+import { string } from "zod"
 
 export interface ContextType {
-  status: boolean,
-  setStatus: Function,
-  avatarUrl: string,
-  setavatarUrl : Function
-  // name: string,
-  // setName: Function,
-  // userid: string,
-  // setUserid: Function
+  status: boolean;
+  setStatus: Function;
+  avatarUrl: string;
+  setavatarUrl : Function;
+  name: string;
+  setName: Function;
+  userid: string;
+  setUserid: Function;
 }
 
 export default function SignInAccount() {
@@ -36,7 +37,7 @@ export default function SignInAccount() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {status,setStatus , avatarUrl , setavatarUrl} = useGlobalContextProvider() as ContextType;
+  const {status,setStatus , avatarUrl , setavatarUrl,setName,setUserid} = useGlobalContextProvider() as ContextType;
 
 
   const { push } = useRouter();
@@ -48,10 +49,9 @@ export default function SignInAccount() {
       setavatarUrl(avatarinfo);
       console.log(userinfo)
       toast.success("Sign In success ✅");
-
       setStatus(true);
+      setUserid(userinfo.$id);  
       push('/');
-      // setUserid(userinfo.$id)
     } catch (error) {
       toast.error("Error in Sign In 🚫")
       console.error(error)

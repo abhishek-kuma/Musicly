@@ -3,6 +3,8 @@ import * as React from "react"
 import { CheckIcon, PaperPlaneIcon, PlusIcon } from "@radix-ui/react-icons"
 import { IoMdClose } from "react-icons/io";
 import { useGlobalContextProvider } from "@/assets/GlobalContext";
+import authService from "@/appwrite/config"
+import { appWriteChatCollectionId, appWriteDatabaseId } from '@/appwrite/secrets';
 import { cn } from "@/lib/utils"
 import {
   Avatar,
@@ -42,67 +44,101 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 
-interface gloablInfoInterface{
-  chatboxOpen : boolean;
-  setchatboxOpen : Function;
+interface gloablInfoInterface {
+  chatboxOpen: boolean;
+  setchatboxOpen: Function;
+  userid: string;
+  name: string;
+}
+
+interface Payload {
+  receiverid: string;
+  content: string;
+}
+
+interface Message {
+  role: string;
+  content: string;
 }
 
 const users = [
   {
     name: "Olivia Martin",
     email: "m@example.com",
-    avatar: "/avatars/01.png",
+    avatar: "https://github.com/shadcn.png",
+    id: "9898"
   },
   {
     name: "Isabella Nguyen",
     email: "isabella.nguyen@email.com",
-    avatar: "/avatars/03.png",
-  },
-  {
-    name: "Emma Wilson",
-    email: "emma@example.com",
-    avatar: "/avatars/05.png",
-  },
-  {
-    name: "Jackson Lee",
-    email: "lee@example.com",
-    avatar: "/avatars/02.png",
-  },
-  {
-    name: "William Kim",
-    email: "will@email.com",
-    avatar: "/avatars/04.png",
+    avatar: "https://github.com/shadcn.png",
+    id: "8989"
   },
 ] as const
 
 type User = (typeof users)[number]
 
 export default function ChatBox() {
-  const [open, setOpen] = React.useState(false)
-  const [selectedUsers, setSelectedUsers] = React.useState<User[]>([])
-
-  const {chatboxOpen,setchatboxOpen} =  useGlobalContextProvider() as gloablInfoInterface
-
-  const [messages, setMessages] = React.useState([
-    {
-      role: "agent",
-      content: "Hi, how can I help you today?",
-    },
-    {
-      role: "user",
-      content: "Hey, I'm having trouble with my account.",
-    },
-    {
-      role: "agent",
-      content: "What seems to be the problem?",
-    },
-    {
-      role: "user",
-      content: "I can't log in.",
-    },
-  ])
   const [input, setInput] = React.useState("")
   const inputLength = input.trim().length
+  const [open, setOpen] = React.useState(false)
+  const [selectedUsers, setSelectedUsers] = React.useState<User[]>([])
+  const { chatboxOpen, setchatboxOpen, userid, name } = useGlobalContextProvider() as gloablInfoInterface
+  const [ReceiverId, setReceiverId] = React.useState("");
+  const [ReceiverName, setReceiverName] = React.useState("");
+  const [messages, setMessages] = React.useState<Message[]>([]);
+
+  async function getPrevMsgs() {
+    try {
+      const resp = await authService.getPrevMessages({ userid: userid, receiverid: ReceiverId })
+      console.log(resp);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  React.useEffect(() => {
+    getPrevMsgs();
+    const unsubscribe = authService.client.subscribe(`databases.${appWriteDatabaseId}.collections.${appWriteChatCollectionId}.documents`, (response: { payload: Payload }) => {
+      if (response.payload.receiverid === userid) {
+        console.log("A new document is created", response);
+        setMessages([
+          ...messages,
+          {
+            role: "agent",
+            content: response.payload.content,
+          },
+        ])
+      }
+
+      return () => {
+        unsubscribe();
+      };
+    });
+  }, [chatboxOpen])
+
+
+  async function handleSendMessage() {
+    try {
+      console.log("button is clicked")
+      if (inputLength === 0) return
+      setMessages([
+        ...messages,
+        {
+          role: "user",
+          content: input,
+        },
+      ])
+      await authService.sendChat({ content: input, senderId: userid, receiverId: ReceiverId, senderName: name, receiverName: ReceiverName })
+      setInput("")
+
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+
 
   return (
     <>
@@ -111,7 +147,7 @@ export default function ChatBox() {
           <div className="flex items-center space-x-4">
             <Avatar>
               <AvatarImage src="/avatars/01.png" alt="Image" />
-              <AvatarFallback>OM</AvatarFallback>
+              <AvatarFallback>SK</AvatarFallback>
             </Avatar>
             <div>
               <p className="text-sm font-medium leading-none">Sofia Davis</p>
@@ -121,7 +157,6 @@ export default function ChatBox() {
           <TooltipProvider delayDuration={0}>
             <Tooltip>
               <TooltipTrigger asChild>
-
 
                 <Button
                   size="icon"
@@ -152,7 +187,7 @@ export default function ChatBox() {
                   <span className="sr-only">Close Chat</span>
                 </Button>
 
-                
+
 
 
               </TooltipTrigger>
@@ -162,37 +197,41 @@ export default function ChatBox() {
         </CardHeader>
         <CardContent>
           <ScrollArea className="h-[400px] w-[350px]">
-          <div className="space-y-4">
+            <div className="space-y-4">
 
-            {messages.map((message, index) => (
-              <div
-              key={index}
-              className={cn(
-                  "flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm",
-                  message.role === "user"
-                    ? "ml-auto bg-primary text-primary-foreground"
-                    : "bg-muted"
-                )}
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    "flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm",
+                    message.role === "user"
+                      ? "ml-auto bg-primary text-primary-foreground"
+                      : "bg-muted"
+                  )}
                 >
-                {message.content}
-              </div>
-            ))}
-          </div>
-            </ScrollArea>
+                  {message.content}
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
         </CardContent>
         <CardFooter>
           <form
-            onSubmit={(event) => {
-              event.preventDefault()
-              if (inputLength === 0) return
-              setMessages([
-                ...messages,
-                {
-                  role: "user",
-                  content: input,
-                },
-              ])
-              setInput("")
+            // onSubmit={(event) => {
+            //   event.preventDefault()
+            //   if (inputLength === 0) return
+            //   setMessages([
+            //     ...messages,
+            //     {
+            //       role: "user",
+            //       content: input,
+            //     },
+            //   ])
+            //   setInput("")
+            // }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSendMessage()
             }}
             className="flex w-full items-center space-x-2"
           >
@@ -231,6 +270,14 @@ export default function ChatBox() {
                     className="flex items-center px-2"
                     onSelect={() => {
                       if (selectedUsers.includes(user)) {
+                        // Setting the current user ID and the User Name of the person we want to send message
+
+                        setReceiverId(user.id);
+                        setReceiverName(user.name);
+
+                        console.log("Receiver ID is : ", ReceiverId);
+                        console.log("Receiver Name is : ", ReceiverName);
+
                         return setSelectedUsers(
                           selectedUsers.filter(
                             (selectedUser) => selectedUser !== user
@@ -244,6 +291,7 @@ export default function ChatBox() {
                         )
                       )
                     }}
+
                   >
                     <Avatar>
                       <AvatarImage src={user.avatar} alt="Image" />
@@ -266,7 +314,7 @@ export default function ChatBox() {
             </CommandList>
           </Command>
           <DialogFooter className="flex items-center border-t p-4 sm:justify-between">
-            {selectedUsers.length > 0 ? (
+            {selectedUsers.length === 0 ? (
               <div className="flex -space-x-2 overflow-hidden">
                 {selectedUsers.map((user) => (
                   <Avatar
@@ -280,11 +328,11 @@ export default function ChatBox() {
               </div>
             ) : (
               <p className="text-sm text-muted-foreground">
-                Select users to add to this thread.
+                Select users you want to chat with.
               </p>
             )}
             <Button
-              disabled={selectedUsers.length < 2}
+              disabled={selectedUsers.length !== 1}
               onClick={() => {
                 setOpen(false)
               }}

@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ModeToggle } from './ModeToggle'
 import { Button } from './ui/button'
 import { GiMusicSpell } from "react-icons/gi";
@@ -13,12 +13,18 @@ interface LoginInterface {
     setStatus: Function;
     avatarUrl:string;
     setavatarUrl:Function;
+    name:string;
+    setName:Function;
+    userid:string;
+    setUserid:Function;
+
 }
 import authService from '@/appwrite/config';
+import { TbMusicShare } from "react-icons/tb";
 
 const Navbar = () => {
 
-    const { status, setStatus,avatarUrl ,setavatarUrl} = useGlobalContextProvider() as LoginInterface;
+    const { status, setStatus,avatarUrl ,setavatarUrl,name,setName,userid,setUserid} = useGlobalContextProvider() as LoginInterface;
     const { push } = useRouter();
 
     async function handleLogOut() {
@@ -32,7 +38,25 @@ const Navbar = () => {
             toast.error('Error in Logging Out ❌');
         }
         
-    }
+    }       
+    
+    useEffect(() => {
+        const getisLoggedin = async () => {
+            try {
+                const userinfo = await authService.getCurrentUser();
+                console.log(userinfo)
+                setStatus(true);
+                if(userinfo){
+                    setUserid(userinfo.$id);
+                    setName(userinfo.name);
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getisLoggedin();
+
+    },[])
 
     return (
         <nav className="p-2 mt-2">
@@ -50,11 +74,17 @@ const Navbar = () => {
                     {!status && <Button className="">
                         <Link href='/signin'>Sign In</Link>
                     </Button>}
-                    {!status && <Button className="">
+                    {!status && <Button className=""> 
                         <Link href='/signup'>Sign Up</Link>
                     </Button>}
                     {status && <Button className="" onClick={handleLogOut}>
                         Log Out
+                    </Button>}
+                    {status && <Button className="">
+                        <Link href='/postsong' className='flex gap-2'>
+                            Add Song
+                            <TbMusicShare className='w-5 h-5'/>
+                        </Link>
                     </Button>}
                     {
                         status && <Avatar>
