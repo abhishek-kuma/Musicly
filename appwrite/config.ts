@@ -1,5 +1,5 @@
 import { Client, Account ,ID,Avatars,Databases, Query} from 'appwrite';
-import { appWriteUrl, appWriteProjectId,appWriteChatCollectionId,appWriteDatabaseId } from './secrets';
+import { appWriteUrl, appWriteProjectId,appWriteChatCollectionId,appWriteDatabaseId ,appWriteUsersCollectionId} from './secrets';
 
 
 class AuthService {
@@ -29,7 +29,10 @@ class AuthService {
             const userAccount = await this.account.create(ID.unique(), email, password, name);
             if (userAccount) {
                 // call another method
+                
+                console.log("userAccount", userAccount);
                 return this.signin({ email, password });
+
             } else {
                 return userAccount;
             }
@@ -78,6 +81,8 @@ class AuthService {
                 "receivername": receiverName ,
                 }
             );
+
+            console.log("Chat is send successfully",chatdocs);
             
         } catch (error) {
             console.log("Appwrite serive :: sendChat :: error", error);
@@ -92,14 +97,50 @@ class AuthService {
                 [
                     Query.orderDesc('$createdAt'),
                     Query.limit(100),
-                    Query.equal("senderid",[userid]),
-                    Query.equal("receiverid",[receiverid]),
+                    Query.equal("senderid",[userid,receiverid])
                 ]
             )
             return response.documents;
             
         } catch (error) {
             console.log("Appwrite serive :: getPrevMessages :: error", error);
+        }
+    }
+
+    async createUserDocument({userid,username,email}: {userid:string,username:string,email:string}){
+        try {
+            const response = await this.databases.createDocument(
+                appWriteDatabaseId,
+                appWriteUsersCollectionId,
+                ID.unique(),
+                { 
+                "userid": userid,
+                "username": username,
+                "email": email,
+                }
+            );
+            return response;
+            
+        } catch (error) {
+            console.log("Appwrite serive :: createUserDocument :: error", error);
+        }
+    }
+
+    async getUserDocument(){
+        try {
+            const response = await this.databases.listDocuments(
+                appWriteDatabaseId,
+                appWriteUsersCollectionId,
+                [
+                    Query.orderDesc('$createdAt'),
+                    Query.limit(100),
+                ]
+            )
+            console.log("response",response);
+            return response.documents;
+            
+        } catch (error) {
+            console.log("Appwrite serive :: getUserDocument :: error", error);
         }
     }
 

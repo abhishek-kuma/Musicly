@@ -42,6 +42,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Content } from "next/font/google";
 
 
 interface gloablInfoInterface {
@@ -60,49 +61,89 @@ interface Message {
   role: string;
   content: string;
 }
+interface UserInterface {
+  name: string;
+  email: string;
+  avatar: string;
+  id: string;
+}
 
-const users = [
-  {
-    name: "Olivia Martin",
-    email: "m@example.com",
-    avatar: "https://github.com/shadcn.png",
-    id: "9898"
-  },
-  {
-    name: "Isabella Nguyen",
-    email: "isabella.nguyen@email.com",
-    avatar: "https://github.com/shadcn.png",
-    id: "8989"
-  },
-] as const
-
-type User = (typeof users)[number]
 
 export default function ChatBox() {
   const [input, setInput] = React.useState("")
   const inputLength = input.trim().length
   const [open, setOpen] = React.useState(false)
-  const [selectedUsers, setSelectedUsers] = React.useState<User[]>([])
+
+
+  const [selectedUsers, setSelectedUsers] = React.useState<UserInterface[]>([])
   const { chatboxOpen, setchatboxOpen, userid, name } = useGlobalContextProvider() as gloablInfoInterface
   const [ReceiverId, setReceiverId] = React.useState("");
   const [ReceiverName, setReceiverName] = React.useState("");
+  const [ReceiverEmail, setReceiverEmail] = React.useState("");
   const [messages, setMessages] = React.useState<Message[]>([]);
+  const [users, setUsers] = React.useState<UserInterface[]>([]);
 
   async function getPrevMsgs() {
     try {
       const resp = await authService.getPrevMessages({ userid: userid, receiverid: ReceiverId })
-      console.log(resp);
+      if (resp) {
+        for (let i = 0; i < resp.length; i++) {
+          if (resp[i].senderid === userid) {
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              {
+                role: "user",
+                content: resp[i].content,
+              },
+            ])
+          }
+          else {
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              {
+                role: "agent",
+                content: resp[i].content,
+              },
+            ])
+          }
+        }
+      }
+
     } catch (error) {
       console.log(error);
     }
   }
 
+  async function getUserInfo() {
+    const userData = await authService.getUserDocument();
+    // set the current userData to null
+    setUsers([]);
+    if (userData) {
+      for (let i = 0; i < userData.length; i++) {
+        if (userData[i].userid === userid) {
+        }
+        else {
+          setUsers([
+            ...users,
+            {
+              name: userData[i].username,
+              email: userData[i].email,
+              avatar: "",
+              id: userData[i].userid,
+            },
+          ]);
+        }
+      }
+    }
+  }
+
 
   React.useEffect(() => {
-    getPrevMsgs();
+    getUserInfo();
     const unsubscribe = authService.client.subscribe(`databases.${appWriteDatabaseId}.collections.${appWriteChatCollectionId}.documents`, (response: { payload: Payload }) => {
+      console.log(userid);
+      console.log("A new document is created", response);
       if (response.payload.receiverid === userid) {
-        console.log("A new document is created", response);
         setMessages([
           ...messages,
           {
@@ -111,18 +152,19 @@ export default function ChatBox() {
           },
         ])
       }
-
-      return () => {
-        unsubscribe();
-      };
     });
-  }, [chatboxOpen])
+  }, [])
+
+  React.useEffect(() => {
+    if (ReceiverId === "") return
+    getPrevMsgs();
+  }, [ReceiverId])
 
 
   async function handleSendMessage() {
     try {
       console.log("button is clicked")
-      if (inputLength === 0) return
+      if (input.length === 0) return
       setMessages([
         ...messages,
         {
@@ -131,7 +173,7 @@ export default function ChatBox() {
         },
       ])
       await authService.sendChat({ content: input, senderId: userid, receiverId: ReceiverId, senderName: name, receiverName: ReceiverName })
-      setInput("")
+      setInput("");
 
     } catch (error) {
       console.log(error);
@@ -142,6 +184,8 @@ export default function ChatBox() {
 
   return (
     <>
+      <p>{name}</p>
+      <p>{userid}</p>
       <Card className="">
         <CardHeader className="flex flex-row items-center">
           <div className="flex items-center space-x-4">
@@ -150,8 +194,8 @@ export default function ChatBox() {
               <AvatarFallback>SK</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm font-medium leading-none">Sofia Davis</p>
-              <p className="text-sm text-muted-foreground">m@example.com</p>
+              <p className="text-sm font-medium leading-none">{ReceiverName}</p>
+              <p className="text-sm text-muted-foreground">{ReceiverEmail}</p>
             </div>
           </div>
           <TooltipProvider delayDuration={0}>
@@ -270,32 +314,25 @@ export default function ChatBox() {
                     className="flex items-center px-2"
                     onSelect={() => {
                       if (selectedUsers.includes(user)) {
-                        // Setting the current user ID and the User Name of the person we want to send message
+                        // Clear the selected users array
+                        setSelectedUsers([]);
 
+                        // Setting the current user ID and the User Name of the person we want to send message
                         setReceiverId(user.id);
                         setReceiverName(user.name);
+                        setReceiverEmail(user.email);
 
                         console.log("Receiver ID is : ", ReceiverId);
                         console.log("Receiver Name is : ", ReceiverName);
-
-                        return setSelectedUsers(
-                          selectedUsers.filter(
-                            (selectedUser) => selectedUser !== user
-                          )
-                        )
+                      } else {
+                        setSelectedUsers([user]);
                       }
-
-                      return setSelectedUsers(
-                        [...users].filter((u) =>
-                          [...selectedUsers, user].includes(u)
-                        )
-                      )
+                      
                     }}
-
                   >
                     <Avatar>
                       <AvatarImage src={user.avatar} alt="Image" />
-                      <AvatarFallback>{user.name[0]}</AvatarFallback>
+                      <AvatarFallback>{user.name[0] + user.name[1]}</AvatarFallback>
                     </Avatar>
                     <div className="ml-2">
                       <p className="text-sm font-medium leading-none">
@@ -314,7 +351,7 @@ export default function ChatBox() {
             </CommandList>
           </Command>
           <DialogFooter className="flex items-center border-t p-4 sm:justify-between">
-            {selectedUsers.length === 0 ? (
+            {selectedUsers.length === 1 ? (
               <div className="flex -space-x-2 overflow-hidden">
                 {selectedUsers.map((user) => (
                   <Avatar
@@ -322,7 +359,7 @@ export default function ChatBox() {
                     className="inline-block border-2 border-background"
                   >
                     <AvatarImage src={user.avatar} />
-                    <AvatarFallback>{user.name[0]}</AvatarFallback>
+                    <AvatarFallback>{user.name[0] + user.name[1]}</AvatarFallback>
                   </Avatar>
                 ))}
               </div>

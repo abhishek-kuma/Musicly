@@ -18,8 +18,6 @@ import { toast } from "sonner"
 import { useRouter } from 'next/navigation';
 import { useGlobalContextProvider } from "@/assets/GlobalContext"
 
-
-
 export interface ContextType {
   status: boolean
   setStatus: Function
@@ -40,6 +38,7 @@ export default function SignUpForm() {
       const userAccount = await authService.signup({ email, password, name });
       toast.success('Sign Up success ✅');
       setStatus(true);
+      await authService.createUserDocument({userid:userAccount.$id,username:name,email:email});
       push('/');
     } catch (error) {
       toast.error('Error in Sign Up 🚫');

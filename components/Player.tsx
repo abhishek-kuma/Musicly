@@ -26,7 +26,7 @@ const Player = () => {
         <div className=''>
             <AudioPlayer
                 className='rhap_theme-color: #868686;'
-                autoPlay
+                // autoPlay
                 src={musicTracks[songindex].src}
                 onPlay={e => console.log("onPlay")}
                 showDownloadProgress={true}

@@ -40,23 +40,7 @@ const Navbar = () => {
         
     }       
     
-    useEffect(() => {
-        const getisLoggedin = async () => {
-            try {
-                const userinfo = await authService.getCurrentUser();
-                console.log(userinfo)
-                setStatus(true);
-                if(userinfo){
-                    setUserid(userinfo.$id);
-                    setName(userinfo.name);
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        getisLoggedin();
 
-    },[])
 
     return (
         <nav className="p-2 mt-2">
@@ -92,7 +76,6 @@ const Navbar = () => {
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                     }
-
                     <ModeToggle />
                 </div>
             </div>
