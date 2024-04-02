@@ -29,7 +29,6 @@ class AuthService {
             const userAccount = await this.account.create(ID.unique(), email, password, name);
             if (userAccount) {
                 // call another method
-
                 console.log("userAccount", userAccount);
                 return this.signin({ email, password });
 
@@ -59,7 +58,9 @@ class AuthService {
         return null;
     }
     async logout() {
-
+        /*
+        function to Logout the user instance.
+        */
         try {
             await this.account.deleteSessions();
         } catch (error) {

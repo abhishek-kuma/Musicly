@@ -13,20 +13,21 @@ export const GlobalContextProvider = ({ children }: Props) => {
     const [avatarUrl, setavatarUrl] = useState<string>("");
     const [chatboxOpen, setchatboxOpen] = useState<boolean>(false);
 
-    const globalProps = {
-        status,
-        setStatus,
-        name,
-        setName,
-        userid,
-        setUserid,
-        songindex,
-        setSongindex,
-        avatarUrl,
-        setavatarUrl,
-        chatboxOpen,
-        setchatboxOpen
-    }
+    const globalProps = {        
+        status, // status: indicates whether the user is logged in or not        
+        setStatus, // setStatus: sets the status of the user        
+        name, // name: the name of the user        
+        setName, // setName: sets the name of the user        
+        userid, // userid: the id of the user        
+        setUserid, // setUserid: sets the user id of the user        
+        songindex, // songindex: the index of the current song        
+        setSongindex, // setSongindex: sets the index of the current song        
+        avatarUrl, // avatarUrl: the URL of the user's avatar        
+        setavatarUrl, // setavatarUrl: sets the URL of the user's avatar        
+        chatboxOpen, // chatboxOpen: indicates whether the chatbox is open or not        
+        setchatboxOpen // setchatboxOpen: sets the state of the chatbox    
+    } 
+
     return (
         <globalContext.Provider value={globalProps}>
             {children}
