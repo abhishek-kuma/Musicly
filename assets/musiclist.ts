@@ -6,7 +6,7 @@ const musicTracks = [
         letra: "lalaal lalalala",
         artist: "Benjamin Tissot",
         album: "Memories",
-        duration : "2:00",
+        duration: "2:00",
     },
     {
         ID: "2",
@@ -15,7 +15,7 @@ const musicTracks = [
         letra: "lalaal lalalala",
         artist: "Benjamin Tissot",
         album: "Memories",
-        duration : "2:00",
+        duration: "2:00",
     },
     {
         ID: "3",
@@ -24,7 +24,7 @@ const musicTracks = [
         letra: "lalaal lalalala",
         artist: "Benjamin Tissot",
         album: "Memories",
-        duration : "2:00",
+        duration: "2:00",
 
     },
     {
@@ -34,7 +34,7 @@ const musicTracks = [
         letra: "lalaal lalalala",
         artist: "Benjamin Tissot",
         album: "Memories",
-        duration : "2:00",
+        duration: "2:00",
     },
     {
         ID: "5",
@@ -43,7 +43,7 @@ const musicTracks = [
         letra: "lalaal lalalala",
         artist: "Benjamin Tissot",
         album: "Memories",
-        duration : "2:00",
+        duration: "2:00",
 
     },
     {
@@ -53,7 +53,7 @@ const musicTracks = [
         letra: "lalaal lalalala",
         artist: "Benjamin Tissot",
         album: "Memories",
-        duration : "2:00",
+        duration: "2:00",
     },
     {
         ID: "7",
@@ -62,7 +62,7 @@ const musicTracks = [
         letra: "lalaal lalalala",
         artist: "Benjamin Tissot",
         album: "Memories",
-        duration : "2:00",
+        duration: "2:00",
     },
     {
         ID: "8",
@@ -71,7 +71,7 @@ const musicTracks = [
         letra: "lalaal lalalala",
         artist: "Benjamin Tissot",
         album: "Memories",
-        duration : "2:00",
+        duration: "2:00",
     },
     {
         ID: "9",
@@ -80,7 +80,7 @@ const musicTracks = [
         letra: "lalaal lalalala",
         artist: "Benjamin Tissot",
         album: "Memories",
-        duration : "2:00",
+        duration: "2:00",
     },
     {
         ID: "10",
@@ -89,7 +89,7 @@ const musicTracks = [
         letra: "lalaal lalalala",
         artist: "Benjamin Tissot",
         album: "Memories",
-        duration : "2:00",
+        duration: "2:00",
     },
     {
         ID: "11",
@@ -98,7 +98,7 @@ const musicTracks = [
         letra: "lalaal lalalala",
         artist: "Benjamin Tissot",
         album: "Memories",
-        duration : "2:00",
+        duration: "2:00",
     },
     {
         ID: "12",
@@ -108,7 +108,7 @@ const musicTracks = [
         letra: "lalaal lalalala",
         artist: "Benjamin Tissot",
         album: "Memories",
-        duration : "2:00",
+        duration: "2:00",
     },
     {
         ID: "13",
@@ -117,7 +117,7 @@ const musicTracks = [
         letra: "lalaal lalalala",
         artist: "Benjamin Tissot",
         album: "Memories",
-        duration : "2:00",
+        duration: "2:00",
     },
     {
         ID: "14",
@@ -126,7 +126,7 @@ const musicTracks = [
         letra: "lalaal lalalala",
         artist: "Benjamin Tissot",
         album: "Memories",
-        duration : "2:00",
+        duration: "2:00",
     },
     {
         ID: "15",
@@ -135,7 +135,7 @@ const musicTracks = [
         letra: "lalaal lalalala",
         artist: "Benjamin Tissot",
         album: "Memories",
-        duration : "2:00",
+        duration: "2:00",
     }
     ,
     {
@@ -187,7 +187,7 @@ const musicTracks = [
         album: "Memories",
 
     }
-    
+
 ];
 
 

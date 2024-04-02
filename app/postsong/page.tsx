@@ -186,7 +186,7 @@ export default function Home() {
                           tabIndex={0}
                         >
                           <div className="flex gap-3 align-middle ">
-                            Add your Music Files
+                            Add your Music Files | Under Development
                             <TbMusicPlus className="h-5 w-5" />
                           </div>
                           <input {...getInputProps()} />

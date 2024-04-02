@@ -11,20 +11,20 @@ import { useRouter } from 'next/navigation';
 interface LoginInterface {
     status: boolean;
     setStatus: Function;
-    avatarUrl:string;
-    setavatarUrl:Function;
-    name:string;
-    setName:Function;
-    userid:string;
-    setUserid:Function;
-
+    avatarUrl: string;
+    setavatarUrl: Function;
+    name: string;
+    setName: Function;
+    userid: string;
+    setUserid: Function;
 }
+
 import authService from '@/appwrite/config';
 import { TbMusicShare } from "react-icons/tb";
 
 const Navbar = () => {
 
-    const { status, setStatus,avatarUrl ,setavatarUrl,name,setName,userid,setUserid} = useGlobalContextProvider() as LoginInterface;
+    const { status, setStatus, avatarUrl, setavatarUrl, name, setName, userid, setUserid } = useGlobalContextProvider() as LoginInterface;
     const { push } = useRouter();
 
     async function handleLogOut() {
@@ -37,10 +37,7 @@ const Navbar = () => {
         } catch (error) {
             toast.error('Error in Logging Out ❌');
         }
-        
-    }       
-    
-
+    }
 
     return (
         <nav className="p-2 mt-2">
@@ -58,7 +55,7 @@ const Navbar = () => {
                     {!status && <Button className="">
                         <Link href='/signin'>Sign In</Link>
                     </Button>}
-                    {!status && <Button className=""> 
+                    {!status && <Button className="">
                         <Link href='/signup'>Sign Up</Link>
                     </Button>}
                     {status && <Button className="" onClick={handleLogOut}>
@@ -67,12 +64,12 @@ const Navbar = () => {
                     {status && <Button className="">
                         <Link href='/postsong' className='flex gap-2'>
                             Add Song
-                            <TbMusicShare className='w-5 h-5'/>
+                            <TbMusicShare className='w-5 h-5' />
                         </Link>
                     </Button>}
                     {
                         status && <Avatar>
-                            <AvatarImage src={avatarUrl||"https://github.com/shadcn.png"} />
+                            <AvatarImage src={avatarUrl || "https://github.com/shadcn.png"} />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                     }

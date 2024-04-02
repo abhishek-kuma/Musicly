@@ -1,19 +1,19 @@
-import { Client, Account ,ID,Avatars,Databases, Query} from 'appwrite';
-import { appWriteUrl, appWriteProjectId,appWriteChatCollectionId,appWriteDatabaseId ,appWriteUsersCollectionId} from './secrets';
+import { Client, Account, ID, Avatars, Databases, Query } from 'appwrite';
+import { appWriteUrl, appWriteProjectId, appWriteChatCollectionId, appWriteDatabaseId, appWriteUsersCollectionId } from './secrets';
 
 
 class AuthService {
-    
+
     client = new Client();
-    
+
     account;
-    
+
     constructor() {
         this.client
-        .setEndpoint(appWriteUrl) // Your API Endpoint
-        .setProject(appWriteProjectId) // Your project ID);
+            .setEndpoint(appWriteUrl) // Your API Endpoint
+            .setProject(appWriteProjectId) // Your project ID);
         this.account = new Account(this.client);
-        
+
     }
     databases = new Databases(this.client);
 
@@ -22,14 +22,14 @@ class AuthService {
         const response = await avatars.getInitials();
         return response;
     }
-    
+
 
     async signup({ email, password, name }: { email: string, password: string, name: string }) {
         try {
             const userAccount = await this.account.create(ID.unique(), email, password, name);
             if (userAccount) {
                 // call another method
-                
+
                 console.log("userAccount", userAccount);
                 return this.signin({ email, password });
 
@@ -67,29 +67,32 @@ class AuthService {
         }
     }
 
-    async sendChat({content , senderId , receiverId ,senderName , receiverName}: {content:string , senderId:string , receiverId:string ,senderName:string , receiverName:string}){
+    async sendChat({ content, senderId, receiverId, senderName, receiverName }: { content: string, senderId: string, receiverId: string, senderName: string, receiverName: string }) {
         try {
             const chatdocs = await this.databases.createDocument(
                 appWriteDatabaseId,
                 appWriteChatCollectionId,
                 ID.unique(),
-                { 
-                "content": content,
-                "senderid":senderId ,
-                "receiverid": receiverId ,
-                "sendername": senderName,
-                "receivername": receiverName ,
+                {
+                    "content": content,
+                    "senderid": senderId,
+                    "receiverid": receiverId,
+                    "sendername": senderName,
+                    "receivername": receiverName,
                 }
             );
 
-            console.log("Chat is send successfully",chatdocs);
-            
+            console.log("Chat is send successfully", chatdocs);
+
         } catch (error) {
             console.log("Appwrite serive :: sendChat :: error", error);
         }
     }
 
-    async getPrevMessages({userid,receiverid}: {userid:string,receiverid:string}){
+    async getPrevMessages({ userid, receiverid }: { userid: string, receiverid: string }) {
+        /*
+        Helpfull to ge the previous messeges inside of chatbox.
+        */
         try {
             const response = await this.databases.listDocuments(
                 appWriteDatabaseId,
@@ -97,36 +100,36 @@ class AuthService {
                 [
                     Query.orderDesc('$createdAt'),
                     Query.limit(100),
-                    Query.equal("senderid",[userid,receiverid])
+                    Query.equal("senderid", [userid, receiverid])
                 ]
             )
             return response.documents;
-            
+
         } catch (error) {
             console.log("Appwrite serive :: getPrevMessages :: error", error);
         }
     }
 
-    async createUserDocument({userid,username,email}: {userid:string,username:string,email:string}){
+    async createUserDocument({ userid, username, email }: { userid: string, username: string, email: string }) {
         try {
             const response = await this.databases.createDocument(
                 appWriteDatabaseId,
                 appWriteUsersCollectionId,
                 ID.unique(),
-                { 
-                "userid": userid,
-                "username": username,
-                "email": email,
+                {
+                    "userid": userid,
+                    "username": username,
+                    "email": email,
                 }
             );
             return response;
-            
+
         } catch (error) {
             console.log("Appwrite serive :: createUserDocument :: error", error);
         }
     }
 
-    async getUserDocument(){
+    async getUserDocument() {
         try {
             const response = await this.databases.listDocuments(
                 appWriteDatabaseId,
@@ -136,14 +139,24 @@ class AuthService {
                     Query.limit(100),
                 ]
             )
-            console.log("response",response);
+            console.log("response", response);
             return response.documents;
-            
+
         } catch (error) {
             console.log("Appwrite serive :: getUserDocument :: error", error);
         }
     }
 
+    async postMusic() {
+        /*
+        This is a function to postMusic by using the Apprwrite cloud.
+        */
+        try {
+            console.log('Music is Uploaded ...')
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 const authService = new AuthService();
 export default authService;

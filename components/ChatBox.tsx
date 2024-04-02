@@ -327,7 +327,7 @@ export default function ChatBox() {
                       } else {
                         setSelectedUsers([user]);
                       }
-                      
+
                     }}
                   >
                     <Avatar>

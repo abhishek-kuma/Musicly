@@ -4,8 +4,7 @@ import Player from './Player'
 const MusicPlayer = () => {
   return (
     <div>
-    
-      <Player/>
+      <Player />
     </div>
   )
 }

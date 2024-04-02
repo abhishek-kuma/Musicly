@@ -7,10 +7,10 @@ interface Props {
 
 export const GlobalContextProvider = ({ children }: Props) => {
     const [status, setStatus] = useState<boolean>(false);
-    const [name , setName] = useState<string>("Abhishek");
-    const [userid , setUserid] = useState<string>("");
-    const [songindex , setSongindex] = useState<number>(0);
-    const [avatarUrl , setavatarUrl] = useState<string>("");
+    const [name, setName] = useState<string>("Abhishek");
+    const [userid, setUserid] = useState<string>("");
+    const [songindex, setSongindex] = useState<number>(0);
+    const [avatarUrl, setavatarUrl] = useState<string>("");
     const [chatboxOpen, setchatboxOpen] = useState<boolean>(false);
 
     const globalProps = {
