@@ -1,6 +1,6 @@
 # MUSICLY - Your Ultimate Music Experience
 
-Welcome to MUSICLY, a music streaming platform built with [Next.js](https://nextjs.org/), providing an unparalleled music listening experience.
+Welcome to MUSICLY, a music streaming platform built with [Next.js](https://nextjs.org/), providing an unparalleled music listening experience. The link to this music platform can be found on 
 
 
 ## Contributing

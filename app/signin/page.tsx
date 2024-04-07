@@ -20,12 +20,14 @@ import { toast } from "sonner"
 import { useGlobalContextProvider } from "@/assets/GlobalContext"
 import { useRouter } from "next/navigation"
 import { string } from "zod"
+import { FaGoogle } from "react-icons/fa6";
+import { set } from "react-hook-form"
 
 export interface ContextType {
   status: boolean;
   setStatus: Function;
   avatarUrl: string;
-  setavatarUrl : Function;
+  setavatarUrl: Function;
   name: string;
   setName: Function;
   userid: string;
@@ -37,23 +39,36 @@ export default function SignInAccount() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {status,setStatus , avatarUrl , setavatarUrl,setName,setUserid} = useGlobalContextProvider() as ContextType;
+  const { status, setStatus, avatarUrl, setavatarUrl, setName, setUserid } = useGlobalContextProvider() as ContextType;
 
 
   const { push } = useRouter();
 
-  async function handleLogin() {
+  async function handleLoginEmail() {
     try {
-      const userinfo = await authService.signin({ email, password });
+      const userinfo = await authService.signinEmail({ email, password });
       const avatarinfo = await authService.getAvatar();
       setavatarUrl(avatarinfo);
       console.log(userinfo)
       toast.success("Sign In success ✅");
       setStatus(true);
-      setUserid(userinfo.$id);  
+      setUserid(userinfo.$id);
       push('/');
     } catch (error) {
       toast.error("Error in Sign In 🚫")
+      console.error(error)
+    }
+  }
+  async function handleLoginOauth() {
+    try {
+      const userinfo = await authService.continueOauth();
+      const avatarinfo = await authService.getAvatar();
+      setavatarUrl(avatarinfo);
+      console.log(userinfo);
+      setStatus(true);
+      toast.success("Sign In success ✅");
+      push('/');
+    } catch (error) {
       console.error(error)
     }
   }
@@ -87,14 +102,12 @@ export default function SignInAccount() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col">
-            <Button className="w-full" onClick={handleLogin}>
+            <Button className="w-full m-2" onClick={handleLoginEmail}>
               <IoMail className="mr-2 h-4 w-4" /> Sign In with Email
             </Button>
+            <Button className="w-full" onClick={handleLoginOauth}><FaGoogle className="mr-2 h-4 w-4" />Continue with Google</Button>
             <p className="mt-2 text-xs text-center text-gray-700 dark:text-white">
-            {" "}
-               Don
-               &apos;
-               t have an account?{" "}
+              {" "} Don&apos;t have an account?{" "}
               <span className=" text-blue-600 hover:underline"><Link href="/signup">Sign Up</Link></span>
             </p>
           </CardFooter>

@@ -24,13 +24,13 @@ class AuthService {
     }
 
 
-    async signup({ email, password, name }: { email: string, password: string, name: string }) {
+    async signupEmail({ email, password, name }: { email: string, password: string, name: string }) {
         try {
             const userAccount = await this.account.create(ID.unique(), email, password, name);
             if (userAccount) {
                 // call another method
                 console.log("userAccount", userAccount);
-                return this.signin({ email, password });
+                return this.signinEmail({ email, password });
 
             } else {
                 return userAccount;
@@ -40,7 +40,7 @@ class AuthService {
         }
     }
 
-    async signin({ email, password }: { email: string, password: string }) {
+    async signinEmail({ email, password }: { email: string, password: string }) {
         try {
             return await this.account.createEmailSession(email, password);
         } catch (error) {
@@ -48,6 +48,13 @@ class AuthService {
         }
     }
 
+    async continueOauth() {
+        try {
+            return await this.account.createOAuth2Session('google');
+        } catch (error) {
+            throw error;
+        }
+    }
     async getCurrentUser() {
         try {
             return await this.account.get();

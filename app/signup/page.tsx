@@ -17,6 +17,7 @@ import authService from "@/appwrite/config" //appwrite config file
 import { toast } from "sonner"
 import { useRouter } from 'next/navigation';
 import { useGlobalContextProvider } from "@/assets/GlobalContext"
+import { FaGoogle } from "react-icons/fa6";
 
 export interface ContextType {
   status: boolean
@@ -33,13 +34,25 @@ export default function SignUpForm() {
 
   const { push } = useRouter();
 
-  async function handleSignUp() {
+  async function handleSignUpEmail() {
+    /* 
+    Function to handle sign up with using email and password.
+    */
     try {
-      const userAccount = await authService.signup({ email, password, name });
+      const userAccount = await authService.signupEmail({ email, password, name });
       toast.success('Sign Up success ✅');
       setStatus(true);
       await authService.createUserDocument({userid:userAccount.$id,username:name,email:email});
       push('/');
+    } catch (error) {
+      toast.error('Error in Sign Up 🚫');
+      console.error(error);
+    }
+  }
+  async function handleSignUpOauth() {
+    try {
+      console.log('Sign Up with Google');
+      toast.success('Sign Up success ✅');
     } catch (error) {
       toast.error('Error in Sign Up 🚫');
       console.error(error);
@@ -78,9 +91,10 @@ export default function SignUpForm() {
             </span>
           </CardContent>
           <CardFooter className="flex flex-col">
-            <Button className="w-full" onClick={handleSignUp}>
+            <Button className="w-full m-2" onClick={handleSignUpEmail}>
               <IoMail className="mr-2 h-4 w-4" /> Sign Up with Email
             </Button>
+            <Button className="w-full" onClick={handleSignUpOauth}><FaGoogle className="mr-2 h-4 w-4"/>Continue with Google</Button>
             <p className="mt-2 text-xs text-center text-gray-700 dark:text-white">
               {" "}
               Already have an account?{" "}
