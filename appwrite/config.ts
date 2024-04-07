@@ -1,7 +1,6 @@
 import { Client, Account, ID, Avatars, Databases, Query } from 'appwrite';
 import { appWriteUrl, appWriteProjectId, appWriteChatCollectionId, appWriteDatabaseId, appWriteUsersCollectionId } from './secrets';
 
-
 class AuthService {
 
     client = new Client();
@@ -25,11 +24,13 @@ class AuthService {
 
 
     async signupEmail({ email, password, name }: { email: string, password: string, name: string }) {
+        /*
+        
+        */
         try {
             const userAccount = await this.account.create(ID.unique(), email, password, name);
             if (userAccount) {
-                // call another method
-                console.log("userAccount", userAccount);
+                // call another method to Signin
                 return this.signinEmail({ email, password });
 
             } else {
@@ -59,7 +60,7 @@ class AuthService {
         try {
             return await this.account.get();
         } catch (error) {
-            console.log("Appwrite serive :: getCurrentUser :: error", error);
+            console.error("Appwrite serive :: getCurrentUser :: error", error);
         }
 
         return null;
@@ -71,7 +72,7 @@ class AuthService {
         try {
             await this.account.deleteSessions();
         } catch (error) {
-            console.log("Appwrite serive :: logout :: error", error);
+            console.error("Appwrite serive :: logout :: error", error);
         }
     }
 

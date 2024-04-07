@@ -21,7 +21,6 @@ import { useGlobalContextProvider } from "@/assets/GlobalContext"
 import { useRouter } from "next/navigation"
 import { string } from "zod"
 import { FaGoogle } from "react-icons/fa6";
-import { set } from "react-hook-form"
 
 export interface ContextType {
   status: boolean;
@@ -39,7 +38,7 @@ export default function SignInAccount() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { status, setStatus, avatarUrl, setavatarUrl, setName, setUserid } = useGlobalContextProvider() as ContextType;
+  const {setStatus, setavatarUrl, setUserid } = useGlobalContextProvider() as ContextType;
 
 
   const { push } = useRouter();
@@ -62,14 +61,12 @@ export default function SignInAccount() {
   async function handleLoginOauth() {
     try {
       const userinfo = await authService.continueOauth();
-      const avatarinfo = await authService.getAvatar();
-      setavatarUrl(avatarinfo);
-      console.log(userinfo);
-      setStatus(true);
-      toast.success("Sign In success ✅");
-      push('/');
+      if (userinfo) {
+        setStatus(true);  // Sets the status of the user to true which means user is logged in
+        push('/');  // redirect to the home page
+      }
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
   return (
