@@ -19,7 +19,6 @@ import { toast } from "sonner"
 
 import { useGlobalContextProvider } from "@/assets/GlobalContext"
 import { useRouter } from "next/navigation"
-import { string } from "zod"
 import { FaGoogle } from "react-icons/fa6";
 
 export interface ContextType {
@@ -58,8 +57,9 @@ export default function SignInAccount() {
       console.error(error)
     }
   }
-  async function handleLoginOauth() {
+  async function handleLoginOauth(e: any) {
     try {
+      e.preventDefault();
       const userinfo = await authService.continueOauth();
       if (userinfo) {
         setStatus(true);  // Sets the status of the user to true which means user is logged in

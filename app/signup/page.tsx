@@ -30,7 +30,7 @@ export default function SignUpForm() {
   const [name, setName] = useState("")
   const [password, setPassword] = useState("")
 
-  const { status, setStatus } = useGlobalContextProvider() as ContextType;
+  const { setStatus } = useGlobalContextProvider() as ContextType;
 
   const { push } = useRouter();
 
@@ -49,8 +49,9 @@ export default function SignUpForm() {
       console.error(error);
     }
   }
-  async function handleSignUpOauth() {
+  async function handleSignUpOauth(e: any) {
     try {
+      e.preventDefault();
       console.log('Sign Up with Google');
       toast.success('Sign Up success ✅');
     } catch (error) {

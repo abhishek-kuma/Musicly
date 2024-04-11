@@ -76,27 +76,37 @@ class AuthService {
         }
     }
 
-    async sendChat({ content, senderId, receiverId, senderName, receiverName }: { content: string, senderId: string, receiverId: string, senderName: string, receiverName: string }) {
-        try {
-            const chatdocs = await this.databases.createDocument(
-                appWriteDatabaseId,
-                appWriteChatCollectionId,
-                ID.unique(),
-                {
-                    "content": content,
-                    "senderid": senderId,
-                    "receiverid": receiverId,
-                    "sendername": senderName,
-                    "receivername": receiverName,
-                }
-            );
+/**
+ * Sends a chat message.
+ * 
+ * @param content - The content of the chat message.
+ * @param senderId - The ID of the sender.
+ * @param receiverId - The ID of the receiver.
+ * @param senderName - The name of the sender.
+ * @param receiverName - The name of the receiver.
+ */
+async sendChat({ content, senderId, receiverId, senderName, receiverName }: { content: string, senderId: string, receiverId: string, senderName: string, receiverName: string }) {
+    try {
+        // Create a new document in the chat collection
+        const chatdocs = await this.databases.createDocument(
+            appWriteDatabaseId,
+            appWriteChatCollectionId,
+            ID.unique(),
+            {
+                "content": content,
+                "senderid": senderId,
+                "receiverid": receiverId,
+                "sendername": senderName,
+                "receivername": receiverName,
+            }
+        );
 
-            console.log("Chat is send successfully", chatdocs);
+        console.log("Chat is send successfully", chatdocs);
 
-        } catch (error) {
-            console.log("Appwrite serive :: sendChat :: error", error);
-        }
+    } catch (error) {
+        console.log("Appwrite serive :: sendChat :: error", error);
     }
+}
 
     async getPrevMessages({ userid, receiverid }: { userid: string, receiverid: string }) {
         /*
